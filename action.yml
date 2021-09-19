@@ -4,13 +4,10 @@ author: "Thomas Honeyman <hello@thomashoneyman.com>"
 inputs:
   purescript:
     description: "The compiler version to install. Examples: latest, 0.13.8"
-    default: "latest"
   spago:
     description: "The Spago version to install. Examples: latest, 0.15.3"
-    default: "latest"
   psa:
     description: "The psa version to install. Examples: latest, 0.7.2"
-    default: "latest"
   purs-tidy:
     description: "The purs-tidy version to install. Examples: latest, 0.1.1"
   zephyr:
