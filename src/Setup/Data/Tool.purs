@@ -3,12 +3,12 @@ module Setup.Data.Tool where
 import Prelude
 
 import Affjax (URL)
+import Data.Bounded.Generic (genericBottom, genericTop)
 import Data.Either (fromRight')
 import Data.Enum (class Enum, upFromIncluding)
+import Data.Enum.Generic (genericPred, genericSucc)
 import Data.Foldable (elem, fold)
 import Data.Generic.Rep (class Generic)
-import Data.Bounded.Generic (genericBottom, genericTop)
-import Data.Enum.Generic (genericPred, genericSucc)
 import Data.Version (Version, parseVersion)
 import Data.Version as Version
 import Node.Path (FilePath)
@@ -115,23 +115,25 @@ installMethod tool version = do
       , getExecutablePath: \p -> Path.concat [ p, "purescript", executableName ]
       }
 
-    Spago -> Tarball
-      { source: formatGitHub'
-          -- Spago has changed naming conventions from version to version
-          if version >= unsafeVersion "0.18.1" then case platform of
-            Windows -> "Windows"
-            Mac -> "macOS"
-            Linux -> "Linux"
-          else if version == unsafeVersion "0.18.0" then case platform of
-            Windows -> "windows-latest"
-            Mac -> "macOS-latest"
-            Linux -> "linux-latest"
-          else case platform of
-            Windows -> "windows"
-            Mac -> "osx"
-            Linux -> "linux"
-      , getExecutablePath: \p -> Path.concat [ p, executableName ]
-      }
+    Spago ->
+      if version >= unsafeVersion "0.90.0" then NPM ("spago@" <> Version.showVersion version)
+      else Tarball
+        { source: formatGitHub'
+            -- Spago has changed naming conventions from version to version
+            if version >= unsafeVersion "0.18.1" then case platform of
+              Windows -> "Windows"
+              Mac -> "macOS"
+              Linux -> "Linux"
+            else if version == unsafeVersion "0.18.0" then case platform of
+              Windows -> "windows-latest"
+              Mac -> "macOS-latest"
+              Linux -> "linux-latest"
+            else case platform of
+              Windows -> "windows"
+              Mac -> "osx"
+              Linux -> "linux"
+        , getExecutablePath: \p -> Path.concat [ p, executableName ]
+        }
 
     Psa ->
       NPM ("purescript-psa@" <> Version.showVersion version)

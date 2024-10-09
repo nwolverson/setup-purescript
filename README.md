@@ -2,17 +2,17 @@
 
 [![Integration](https://github.com/thomashoneyman/setup-purescript/workflows/Integration/badge.svg?branch=main)](https://github.com/thomashoneyman/setup-purescript/actions?query=workflow%3AIntegration+branch%3Amain)
 [![Sync Versions](https://github.com/thomashoneyman/setup-purescript/workflows/Sync%20Versions/badge.svg?branch=main)](https://github.com/thomashoneyman/setup-purescript/actions?query=workflow%3A"Sync+Versions"+branch%3Amain)
-[![Maintainer: thomashoneyman](https://img.shields.io/badge/maintainer-thomashoneyman-teal.svg)](http://github.com/thomashoneyman)
 
 A GitHub Action which sets up a PureScript toolchain for CI. Contains the following tools by default:
 
 - The [PureScript compiler](https://github.com/purescript/purescript)
 - The [Spago package manager and build tool](https://github.com/purescript/spago)
+  - Use the `unstable` version for spago-next; otherwise, setup-purescript provides [`spago-legacy`](https://github.com/purescript/spago-legacy); see [issue 37](https://github.com/purescript-contrib/setup-purescript/issues/37)
 - The [`psa` error reporting frontend for the compiler](https://github.com/natefaubion/purescript-psa)
 
 You can also optionally include the following tools:
 
-- The [`purs-tidy` code formatter](https://github.com/natefaubion/purs-tidy)
+- The [`purs-tidy` code formatter](https://github.com/natefaubion/purescript-tidy)
 - The [Zephyr dead code elimination tool](https://github.com/coot/zephyr)
 
 This action is designed to support PureScript tools. Your PureScript project may also depend on tooling and libraries provided by the NPM ecosystem, in which case you will also want to use the [setup-node](https://github.com/actions/setup-node) action.
@@ -36,7 +36,12 @@ Other tools are not enabled by default, but you can enable them by specifying th
 
 ### Specify Versions
 
-Each tool can accept a semantic version (only exact versions currently supported) or the string `"latest"`. Tools that are not installed by default must be specified this way to be included in the toolchain.
+Each tool can accept one of the following:
+- a semantic version (only exact versions currently supported)
+- the string `"latest"`, which represents the latest version that uses major, minor, and patch, but will omit versions using pre-release identifiers or build metadata
+- the string `"unstable"`, which represents the latest version no matter what it is (i.e. pre-release identifiers and build metadata are not considered).
+
+Tools that are not installed by default must be specified this way to be included in the toolchain.
 
 ```yaml
 steps:
